@@ -37,7 +37,7 @@ npx wrangler d1 create benkyoulab-db
 npx drizzle-kit generate
 
 # Apply migrations locally
-npx wrangler d1 execute benkyoulab-db --local --file=./drizzle/0000_*.sql
+npx wrangler d1 migrations apply benkyoulab-db --local
 
 # (Optional) Seed sample data
 npx wrangler d1 execute benkyoulab-db --local --file=./seed.sql
@@ -53,8 +53,8 @@ Visit `http://localhost:5173`
 
 ### Default Login (after seeding)
 
-- **Admin**: admin@benkyoulab.com
-- **Password**: Set via Better Auth registration or modify seed data
+- **Admin**: `admin@benkyoulab.id`
+- **Password**: `admin123`
 
 ## 📦 Project Structure
 
@@ -66,8 +66,7 @@ src/
 │   │   └── ui/            # Base components
 │   ├── server/
 │   │   ├── db/            # Schema, DB client
-│   │   ├── services/      # Business logic
-│   │   ├── utils/         # Password, session utils
+│   │   ├── services/      # Business logic (Classes, Students, etc)
 │   │   └── auth.ts        # Better Auth config
 │   ├── auth-client.ts     # Client-side auth
 │   └── utils/             # Shared utilities
@@ -75,12 +74,12 @@ src/
 │   ├── login/             # Auth pages
 │   ├── logout/
 │   └── (app)/             # Protected app pages
-│       ├── dashboard/
-│       ├── students/
-│       ├── teachers/
-│       ├── classes/
-│       ├── payments/
-│       └── reports/
+│       ├── dashboard/     # Real-time dashboard
+│       ├── students/      # Student profile & history
+│       ├── teachers/      # Teacher management
+│       ├── classes/       # Flexible scheduling & sessions
+│       ├── payments/      # Invoicing & payments
+│       └── reports/       # Real-time analytics
 ├── hooks.server.ts        # Auth middleware
 ├── app.css                # Global styles + design tokens
 └── app.d.ts               # Type declarations
@@ -120,7 +119,7 @@ You also must configure your `wrangler.toml` specifying `BETTER_AUTH_URL` and `B
 
 ```bash
 npx drizzle-kit generate
-npx wrangler d1 execute benkyoulab-db --remote --file=./drizzle/0000_*.sql
+npx wrangler d1 migrations apply benkyoulab-db --remote
 ```
 
 ### 4. Deploy
@@ -132,15 +131,16 @@ npx wrangler pages deploy .svelte-kit/cloudflare
 
 ## 📋 Features
 
-- ✅ Student management (CRUD, JLPT levels, enrollment)
-- ✅ Teacher management (CRUD, specialization, availability)
-- ✅ Class scheduling (conflict detection, calendar view)
-- ✅ Progress tracking (per session, per student)
-- ✅ Payment & invoicing (confirmation-based, print-to-PDF)
-- ✅ Dashboard (stats, recent activity, quick actions)
-- ✅ Dark mode + responsive design
-- ✅ Edge-optimized (Cloudflare Workers)
+- ✅ **Flexible Scheduling**: Multi-day schedule support (e.g., Saturday & Sunday) with conflict detection.
+- ✅ **Manual Session Management**: Per-session overrides for time, link, and topic.
+- ✅ **Teacher Workflow**: Manual session completion and progress tracking.
+- ✅ **Student Management**: CRUD, JLPT levels, and enrollment history.
+- ✅ **Payment & Invoicing**: Status-based tracking with print-to-PDF support.
+- ✅ **Real-time Dashboard & Reports**: Analytics and activity feed with 30s auto-polling.
+- ✅ **Modern UI**: Full dark mode, responsive design, and glassmorphism aesthetics.
+- ✅ **Edge-optimized**: Fully functional on Cloudflare Workers/D1.
 
 ## 📝 License
 
 Private — BenkyouLab © 2026
+

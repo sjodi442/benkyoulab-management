@@ -57,6 +57,12 @@ export async function createTeacher(
 	const userId = crypto.randomUUID();
 	const teacherId = crypto.randomUUID();
 
+	// Check if email already exists
+	const existing = await db.query.users.findFirst({ where: eq(users.email, data.email) });
+	if (existing) {
+		throw new Error('Email sudah terdaftar. Gunakan email lain.');
+	}
+
 	await db.insert(users).values({
 		id: userId,
 		name: data.name,

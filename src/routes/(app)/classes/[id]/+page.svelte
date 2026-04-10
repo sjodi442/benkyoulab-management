@@ -85,7 +85,7 @@
 					</div>
 
 					<div class="col-span-2">
-						<label class="block text-xs font-semibold text-surface-800/50 uppercase tracking-wider mb-2">Hari</label>
+						<span class="block text-xs font-semibold text-surface-800/50 uppercase tracking-wider mb-2">Hari</span>
 						<div class="grid grid-cols-2 gap-2">
 							{#each days as day}
 								<label class="flex items-center gap-2 p-2 rounded-lg bg-surface-50 dark:bg-surface-800/50 border border-surface-200 dark:border-white/10 cursor-pointer text-xs">

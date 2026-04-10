@@ -51,7 +51,7 @@
 				</select>
 			</div>
 			<div class="sm:col-span-2">
-				<label class="block text-sm font-medium text-surface-800/70 dark:text-white/60 mb-2.5">Hari *</label>
+				<span class="block text-sm font-medium text-surface-800/70 dark:text-white/60 mb-2.5">Hari *</span>
 				<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
 					{#each days as day}
 						<label class="flex items-center gap-2.5 p-3 rounded-xl bg-surface-50 dark:bg-surface-800/50 border border-surface-200 dark:border-white/10 cursor-pointer transition-all hover:border-primary-500/50 group">

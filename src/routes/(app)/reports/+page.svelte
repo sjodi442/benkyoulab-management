@@ -5,6 +5,9 @@
 
 	let { data }: { data: PageData } = $props();
 
+	type JLPTItem = { level: string | null; count: number };
+	type PaymentStatusItem = { status: "paid" | "pending" | "overdue" | "cancelled" | null; count: number };
+
 	// Polling for real-time updates every 30 seconds
 	onMount(() => {
 		const interval = setInterval(() => {
@@ -22,10 +25,11 @@
 		return new Intl.DateTimeFormat('id-ID', { month: 'short', year: '2-digit' }).format(new Date(parseInt(year), parseInt(month) - 1));
 	}
 
-	let jlptDistribution = $derived(data.reports.jlptDistribution || []);
-	let paymentStatus = $derived(data.reports.paymentStatus || []);
-	let totalStudents = $derived(jlptDistribution.reduce((acc, curr) => acc + curr.count, 0));
-	let totalInvoices = $derived(paymentStatus.reduce((acc, curr) => acc + curr.count, 0));
+	let reports = $derived(data.reports);
+	let jlptDistribution = $derived((reports?.jlptDistribution || []) as JLPTItem[]);
+	let paymentStatus = $derived((reports?.paymentStatus || []) as PaymentStatusItem[]);
+	let totalStudents = $derived(jlptDistribution.reduce((acc: number, curr: JLPTItem) => acc + curr.count, 0));
+	let totalInvoices = $derived(paymentStatus.reduce((acc: number, curr: PaymentStatusItem) => acc + curr.count, 0));
 </script>
 
 <svelte:head>
@@ -52,9 +56,9 @@
 		<div class="bg-white dark:bg-surface-900/50 rounded-2xl border border-surface-200 dark:border-white/5 p-6">
 			<h3 class="text-sm font-semibold text-surface-800 dark:text-white/90 mb-4">Pendapatan Bulanan (6 Bulan Terakhir)</h3>
 			<div class="h-48 flex items-end gap-2 px-2">
-				{#if data.reports.monthlyRevenue.length > 0}
-					{@const max = Math.max(...data.reports.monthlyRevenue.map((d) => d.total || 0), 1)}
-					{#each data.reports.monthlyRevenue as entry}
+				{#if reports?.monthlyRevenue && reports.monthlyRevenue.length > 0}
+					{@const max = Math.max(...reports.monthlyRevenue.map((d: { total: number }) => d.total || 0), 1)}
+					{#each reports.monthlyRevenue as entry}
 						<div class="flex-1 flex flex-col items-center gap-2 group">
 							<div class="relative w-full bg-primary-500/20 rounded-t-lg transition-all duration-500 hover:bg-primary-500/40" style="height: {(entry.total / max) * 100}%">
 								<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-900 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -76,9 +80,9 @@
 		<div class="bg-white dark:bg-surface-900/50 rounded-2xl border border-surface-200 dark:border-white/5 p-6">
 			<h3 class="text-sm font-semibold text-surface-800 dark:text-white/90 mb-4">Pertumbuhan Siswa (6 Bulan Terakhir)</h3>
 			<div class="h-48 flex items-end gap-2 px-2">
-				{#if data.reports.studentGrowth.length > 0}
-					{@const max = Math.max(...data.reports.studentGrowth.map((d) => d.count || 0), 1)}
-					{#each data.reports.studentGrowth as entry}
+				{#if reports?.studentGrowth && reports.studentGrowth.length > 0}
+					{@const max = Math.max(...reports.studentGrowth.map((d: { count: number }) => d.count || 0), 1)}
+					{#each reports.studentGrowth as entry}
 						<div class="flex-1 flex flex-col items-center gap-2 group">
 							<div class="relative w-full bg-violet-500/20 rounded-t-lg transition-all duration-500 hover:bg-violet-500/40" style="height: {(entry.count / max) * 100}%">
 								<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-900 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">

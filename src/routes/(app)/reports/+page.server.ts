@@ -1,9 +1,23 @@
 import type { PageServerLoad } from './$types';
-import { db } from '$lib/server/db';
+import { getDb } from '$lib/server/db';
 import { students, invoices, payments } from '$lib/server/db/schema';
-import { count, eq, sql } from 'drizzle-orm';
+import { count, sql } from 'drizzle-orm';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ platform }) => {
+	const db = platform?.env?.DB ? getDb(platform.env.DB) : null;
+
+	if (!db) {
+		return {
+			reports: {
+				jlptDistribution: [],
+				paymentStatus: [],
+				monthlyRevenue: [],
+				studentGrowth: []
+			},
+			lastUpdated: new Date().toISOString()
+		};
+	}
+
 	// 1. JLPT Distribution
 	const jlptDistribution = await db
 		.select({
@@ -23,6 +37,7 @@ export const load: PageServerLoad = async () => {
 		.groupBy(invoices.status);
 
 	// 3. Revenue by month (Last 6 months)
+	// SQLite strftime('%Y-%m', date)
 	const monthlyRevenue = await db
 		.select({
 			month: sql<string>`strftime('%Y-%m', ${payments.paymentDate})`,

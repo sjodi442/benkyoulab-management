@@ -1,7 +1,17 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+
+	// Polling for real-time updates every 30 seconds
+	onMount(() => {
+		const interval = setInterval(() => {
+			invalidateAll();
+		}, 30000);
+		return () => clearInterval(interval);
+	});
 
 	let stats = $derived([
 		{
@@ -53,7 +63,7 @@
 
 <div class="space-y-6">
 	<!-- Welcome -->
-	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+	<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 		<div>
 			<h1 class="text-2xl font-bold text-surface-800 dark:text-white/95">
 				Selamat datang, {data.user?.name} 👋
@@ -62,8 +72,17 @@
 				Ini adalah ringkasan aktivitas BenkyouLab hari ini.
 			</p>
 		</div>
-		<div class="text-sm text-surface-800/40 dark:text-white/30">
-			{new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+		<div class="flex items-center gap-3">
+			<div class="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full shrink-0">
+				<span class="relative flex h-2 w-2">
+					<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+					<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+				</span>
+				<span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 tracking-wider uppercase">Live Dashboard</span>
+			</div>
+			<div class="text-xs text-surface-800/40 dark:text-white/30 text-right hidden sm:block">
+				{new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+			</div>
 		</div>
 	</div>
 

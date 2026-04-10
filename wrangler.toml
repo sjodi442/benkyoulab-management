@@ -1,0 +1,14 @@
+name = "benkyoulab-management"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".svelte-kit/cloudflare"
+
+[vars]
+BETTER_AUTH_URL = "https://benkyoulab-management.pages.dev"
+BETTER_AUTH_SECRET = "very-secure-secret-key-12345"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "benkyoulab-db"
+database_id = "7870f6e2-17f6-42d6-97ab-c7c9b7e9a73e"
+migrations_dir = "drizzle"

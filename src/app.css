@@ -1,0 +1,169 @@
+@import 'tailwindcss';
+
+/* Enable class-based dark mode in Tailwind 4 */
+@variant dark (&:where(.dark, .dark *));
+
+/* ─── Design Tokens ─────────────────────────────────── */
+@theme {
+	--font-sans: 'Inter', 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+	--font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+	/* Brand colors - Japanese-inspired palette */
+	--color-primary-50: oklch(0.97 0.01 250);
+	--color-primary-100: oklch(0.93 0.03 250);
+	--color-primary-200: oklch(0.86 0.06 250);
+	--color-primary-300: oklch(0.76 0.10 250);
+	--color-primary-400: oklch(0.65 0.15 250);
+	--color-primary-500: oklch(0.55 0.18 250);
+	--color-primary-600: oklch(0.47 0.18 250);
+	--color-primary-700: oklch(0.40 0.16 250);
+	--color-primary-800: oklch(0.34 0.13 250);
+	--color-primary-900: oklch(0.28 0.10 250);
+	--color-primary-950: oklch(0.20 0.08 250);
+
+	/* Accent - Sakura pink */
+	--color-accent-50: oklch(0.97 0.01 350);
+	--color-accent-100: oklch(0.93 0.04 350);
+	--color-accent-200: oklch(0.87 0.07 350);
+	--color-accent-300: oklch(0.78 0.12 350);
+	--color-accent-400: oklch(0.68 0.17 350);
+	--color-accent-500: oklch(0.58 0.20 350);
+
+	/* Emerald for success states */
+	--color-emerald-500: oklch(0.60 0.17 160);
+	--color-emerald-600: oklch(0.52 0.15 160);
+
+	/* Surface colors */
+	--color-surface-50: oklch(0.985 0 0);
+	--color-surface-100: oklch(0.97 0.002 260);
+	--color-surface-200: oklch(0.93 0.004 260);
+	--color-surface-800: oklch(0.22 0.015 260);
+	--color-surface-850: oklch(0.18 0.015 260);
+	--color-surface-900: oklch(0.15 0.015 260);
+	--color-surface-950: oklch(0.12 0.015 260);
+
+	/* Sidebar */
+	--width-sidebar: 260px;
+	--width-sidebar-collapsed: 72px;
+
+	/* Animations */
+	--animate-fade-in: fade-in 0.3s ease-out;
+	--animate-slide-up: slide-up 0.3s ease-out;
+	--animate-slide-in-left: slide-in-left 0.3s ease-out;
+}
+
+@keyframes fade-in {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes slide-up {
+	from { opacity: 0; transform: translateY(12px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+	from { opacity: 0; transform: translateX(-12px); }
+	to { opacity: 1; transform: translateX(0); }
+}
+
+/* ─── Base ──────────────────────────────────────────── */
+@layer base {
+	@font-face {
+		font-family: 'Inter';
+		src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+	}
+
+	html {
+		scroll-behavior: smooth;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	body {
+		font-family: var(--font-sans);
+		background: var(--color-surface-50);
+		color: oklch(0.25 0.01 260);
+		transition: background-color 0.3s ease, color 0.3s ease;
+	}
+
+	.dark body {
+		background: var(--color-surface-950);
+		color: oklch(0.90 0.01 260);
+	}
+
+	::selection {
+		background: var(--color-primary-200);
+		color: var(--color-primary-900);
+	}
+
+	.dark ::selection {
+		background: var(--color-primary-800);
+		color: var(--color-primary-100);
+	}
+}
+
+/* ─── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: oklch(0.70 0.01 260);
+	border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+	background: oklch(0.35 0.01 260);
+}
+
+/* ─── Print styles for invoice PDF ──────────────────── */
+@media print {
+	body {
+		background: white !important;
+		color: black !important;
+		print-color-adjust: exact;
+		-webkit-print-color-adjust: exact;
+	}
+
+	.no-print,
+	nav,
+	.sidebar,
+	.navbar,
+	header,
+	button,
+	select,
+	footer:not(.print-only footer) {
+		display: none !important;
+	}
+
+	.print-only {
+		display: block !important;
+	}
+
+	.invoice-container {
+		box-shadow: none !important;
+		border: none !important;
+		padding: 0 !important;
+		margin: 0 !important;
+		width: 100% !important;
+	}
+
+	main {
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+
+	div[style*="margin-left"] {
+		margin-left: 0 !important;
+	}
+
+	@page {
+		margin: 1cm;
+	}
+}

@@ -1,0 +1,115 @@
+Loading svelte-check in workspace: d:\Projects\Web\benkyoulab-management
+Getting Svelte diagnostics...
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\classes\[id]\+page.server.ts[39m:4:20
+[31mError[39m: Module '"$lib/server/services/classes"' has no exported member 'createSession'. 
+[36mimport { error, fail } from '@sveltejs/kit';
+import { getClass, [35mcreateSession[36m, recordAttendance, recordProgress } from '$lib/server/services/classes';[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\classes\+page.svelte[39m:127:11
+[33mWarn[39m: Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label (svelte)
+[36m									<div class="flex items-center justify-end gap-1">
+										[35m<a href="/classes/{cls.id}" class="p-1.5 rounded-lg text-surface-800/40 dark:text-white/30 hover:text-primary-500 hover:bg-primary-500/5 transition-all">
+											<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+										</a>[36m
+									</div>[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\classes\[id]\+page.svelte[39m:21:3
+[33mWarn[39m: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m	<div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+		[35m<div class="absolute inset-0 bg-surface-900/40 backdrop-blur-sm" onclick={() => showProgressModal = false}></div>[36m
+		<div class="relative w-full max-w-md bg-white dark:bg-surface-900 rounded-2xl shadow-xl overflow-hidden animate-slide-up border border-surface-200 dark:border-white/10">[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\classes\[id]\+page.svelte[39m:21:3
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m	<div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+		[35m<div class="absolute inset-0 bg-surface-900/40 backdrop-blur-sm" onclick={() => showProgressModal = false}></div>[36m
+		<div class="relative w-full max-w-md bg-white dark:bg-surface-900 rounded-2xl shadow-xl overflow-hidden animate-slide-up border border-surface-200 dark:border-white/10">[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\classes\[id]\+page.svelte[39m:26:6
+[33mWarn[39m: Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label (svelte)
+[36m					<h3 class="text-lg font-bold text-surface-800 dark:text-white/90">Catat Progress Siswa</h3>
+					[35m<button type="button" onclick={() => showProgressModal = false} class="p-1.5 text-surface-800/40 hover:bg-surface-100 dark:hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
+						<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+					</button>[36m
+				</div>[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\classes\[id]\+page.svelte[39m:68:5
+[33mWarn[39m: Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label (svelte)
+[36m			<div class="flex items-center gap-3">
+				[35m<a href="/classes" class="p-2 justify-center flex items-center rounded-lg text-surface-800/40 dark:text-white/30 hover:bg-surface-100 dark:hover:bg-white/5 transition-colors">
+					<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+				</a>[36m
+				<div>[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\classes\[id]\+page.svelte[39m:131:11
+[33mWarn[39m: Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label (svelte)
+[36m										</button>
+										[35m<a href="/students/{enrollment.studentId}" class="p-1.5 rounded-lg text-surface-800/40 hover:bg-surface-100 dark:text-white/30 dark:hover:bg-white/5 transition-all outline-none">
+											<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+										</a>[36m
+									</div>[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\classes\new\+page.svelte[39m:21:3
+[33mWarn[39m: Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label (svelte)
+[36m	<div class="flex items-center gap-3">
+		[35m<a href="/classes" class="p-2 rounded-lg text-surface-800/40 dark:text-white/30 hover:bg-surface-100 dark:hover:bg-white/5 transition-colors">
+			<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+		</a>[36m
+		<div>[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\payments\new\+page.svelte[39m:16:3
+[33mWarn[39m: Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label (svelte)
+[36m	<div class="flex items-center gap-3">
+		[35m<a href="/payments" class="p-2 rounded-lg text-surface-800/40 dark:text-white/30 hover:bg-surface-100 dark:hover:bg-white/5 transition-colors">
+			<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+		</a>[36m
+		<div>[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\students\[id]\+page.svelte[39m:21:5
+[33mWarn[39m: Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label (svelte)
+[36m			<div class="flex items-center gap-4">
+				[35m<a href="/students" class="p-2 justify-center flex items-center rounded-lg text-surface-800/40 dark:text-white/30 hover:bg-surface-100 dark:hover:bg-white/5 transition-colors">
+					<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+				</a>[36m
+				<div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-lg font-bold text-white shrink-0">[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\students\new\+page.svelte[39m:18:3
+[33mWarn[39m: Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label (svelte)
+[36m	<div class="flex items-center gap-3">
+		[35m<a href="/students" class="p-2 rounded-lg text-surface-800/40 dark:text-white/30 hover:bg-surface-100 dark:hover:bg-white/5 transition-colors">
+			<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+			</svg>
+		</a>[36m
+		<div>[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\teachers\new\+page.svelte[39m:26:3
+[33mWarn[39m: Buttons and links should either contain text or have an `aria-label`, `aria-labelledby` or `title` attribute
+https://svelte.dev/e/a11y_consider_explicit_label (svelte)
+[36m	<div class="flex items-center gap-3">
+		[35m<a href="/teachers" class="p-2 rounded-lg text-surface-800/40 dark:text-white/30 hover:bg-surface-100 dark:hover:bg-white/5 transition-colors">
+			<svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+		</a>[36m
+		<div>[39m
+
+d:\Projects\Web\benkyoulab-management\[32msrc\routes\(app)\teachers\new\+page.svelte[39m:60:4
+[33mWarn[39m: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+[36m		<div>
+			[35m<label class="block text-sm font-medium text-surface-800/70 dark:text-white/60 mb-2">Spesialisasi</label>[36m
+			<div class="flex flex-wrap gap-2">[39m
+
+====================================
+[31msvelte-check found 1 error and 12 warnings in 8 files
+[39m

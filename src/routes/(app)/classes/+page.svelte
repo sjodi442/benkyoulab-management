@@ -26,9 +26,14 @@
 	function getCalendarData() {
 		const grouped: Record<string, typeof data.classes> = {};
 		for (const day of dayOrder) {
-			grouped[day] = data.classes.filter((c: any) => c.scheduleDay === day);
+			grouped[day] = data.classes.filter((c: any) => c.scheduleDay.includes(day));
 		}
 		return grouped;
+	}
+
+	function formatDays(dayStr: string) {
+		if (!dayStr) return '-';
+		return dayStr.split(',').map(d => dayNames[d] || d).join(', ');
 	}
 </script>
 
@@ -115,7 +120,10 @@
 									<span class="ml-2 px-1.5 py-0.5 text-[10px] font-medium rounded bg-primary-500/10 text-primary-500">{cls.level}</span>
 								</td>
 								<td class="px-5 py-3 text-sm text-surface-800/60 dark:text-white/50 hidden sm:table-cell">{cls.teacher?.user?.name || '-'}</td>
-								<td class="px-5 py-3 text-center text-sm text-surface-800/60 dark:text-white/50">{dayNames[cls.scheduleDay]} {cls.scheduleTime}</td>
+								<td class="px-5 py-3 text-center text-sm text-surface-800/60 dark:text-white/50">
+									<p class="font-medium text-surface-800/80 dark:text-white/70">{formatDays(cls.scheduleDay)}</p>
+									<p class="text-[10px] opacity-60">{cls.scheduleTime}</p>
+								</td>
 								<td class="px-5 py-3 text-center text-sm text-surface-800/60 dark:text-white/50">{cls.enrollments?.length || 0}/{cls.maxStudents}</td>
 								<td class="px-5 py-3 text-center">
 									<span class="px-2 py-0.5 text-xs font-medium rounded-full {cls.status === 'active' ? 'bg-emerald-500/10 text-emerald-500' : cls.status === 'completed' ? 'bg-blue-500/10 text-blue-500' : 'bg-red-500/10 text-red-500'}">

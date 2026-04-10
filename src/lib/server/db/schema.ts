@@ -85,7 +85,7 @@ export const classes = table('classes', {
 	name: t.text('name').notNull(),
 	level: t.text('level').$type<'N5' | 'N4' | 'N3' | 'N2' | 'N1' | 'Kaiwa' | 'SSW'>().notNull(),
 	teacherId: t.text('teacher_id').references(() => teachers.id, { onDelete: 'set null' }),
-	scheduleDay: t.text('schedule_day').$type<'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'>().notNull(),
+	scheduleDay: t.text('schedule_day').notNull(),
 	scheduleTime: t.text('schedule_time').notNull(),
 	durationMinutes: t.integer('duration_minutes').notNull().default(60),
 	meetingLink: t.text('meeting_link'),
@@ -101,6 +101,8 @@ export const classSessions = table('class_sessions', {
 	sessionNumber: t.integer('session_number').notNull(),
 	topic: t.text('topic'),
 	notes: t.text('notes'),
+	sessionTime: t.text('session_time'),
+	meetingLink: t.text('meeting_link'),
 	status: t.text('status').$type<'scheduled' | 'completed' | 'cancelled'>().default('scheduled').notNull()
 });
 

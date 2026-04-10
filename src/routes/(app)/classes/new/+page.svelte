@@ -50,11 +50,16 @@
 					{#each data.teachers as teacher}<option value={teacher.id} selected={form?.teacherId === teacher.id}>{teacher.user?.name}</option>{/each}
 				</select>
 			</div>
-			<div>
-				<label for="scheduleDay" class="block text-sm font-medium text-surface-800/70 dark:text-white/60 mb-1.5">Hari *</label>
-				<select id="scheduleDay" name="scheduleDay" required class="w-full px-4 py-2.5 bg-surface-50 dark:bg-surface-800/50 border border-surface-200 dark:border-white/10 rounded-xl text-sm text-surface-800 dark:text-white/80 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all cursor-pointer">
-					{#each days as day}<option value={day.value} selected={form?.scheduleDay === day.value}>{day.label}</option>{/each}
-				</select>
+			<div class="sm:col-span-2">
+				<label class="block text-sm font-medium text-surface-800/70 dark:text-white/60 mb-2.5">Hari *</label>
+				<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+					{#each days as day}
+						<label class="flex items-center gap-2.5 p-3 rounded-xl bg-surface-50 dark:bg-surface-800/50 border border-surface-200 dark:border-white/10 cursor-pointer transition-all hover:border-primary-500/50 group">
+							<input type="checkbox" name="scheduleDay" value={day.value} class="w-4 h-4 rounded text-primary-500 focus:ring-primary-500/30 border-surface-300" />
+							<span class="text-sm text-surface-800/70 dark:text-white/60 group-hover:text-surface-800 dark:group-hover:text-white transition-colors">{day.label}</span>
+						</label>
+					{/each}
+				</div>
 			</div>
 			<div>
 				<label for="scheduleTime" class="block text-sm font-medium text-surface-800/70 dark:text-white/60 mb-1.5">Jam *</label>

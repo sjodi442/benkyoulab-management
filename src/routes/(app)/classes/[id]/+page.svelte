@@ -24,6 +24,18 @@
 			 s.user?.email?.toLowerCase().includes(studentSearch.toLowerCase()))
 		)
 	);
+
+	const days = [
+		{ value: 'monday', label: 'Senin' }, { value: 'tuesday', label: 'Selasa' },
+		{ value: 'wednesday', label: 'Rabu' }, { value: 'thursday', label: 'Kamis' },
+		{ value: 'friday', label: 'Jumat' }, { value: 'saturday', label: 'Sabtu' },
+		{ value: 'sunday', label: 'Minggu' }
+	];
+
+	function formatDays(dayStr: string) {
+		if (!dayStr) return '-';
+		return dayStr.split(',').map(d => days.find(day => day.value === d)?.label || d).join(', ');
+	}
 </script>
 
 <svelte:head>
@@ -72,17 +84,16 @@
 						</select>
 					</div>
 
-					<div>
-						<label for="scheduleDay" class="block text-xs font-semibold text-surface-800/50 uppercase tracking-wider mb-1.5">Hari</label>
-						<select id="scheduleDay" name="scheduleDay" value={cls.scheduleDay} class="w-full px-4 py-2 bg-surface-50 dark:bg-surface-800/50 border border-surface-200 dark:border-white/10 rounded-xl text-sm">
-							<option value="monday">Senin</option>
-							<option value="tuesday">Selasa</option>
-							<option value="wednesday">Rabu</option>
-							<option value="thursday">Kamis</option>
-							<option value="friday">Jumat</option>
-							<option value="saturday">Sabtu</option>
-							<option value="sunday">Minggu</option>
-						</select>
+					<div class="col-span-2">
+						<label class="block text-xs font-semibold text-surface-800/50 uppercase tracking-wider mb-2">Hari</label>
+						<div class="grid grid-cols-2 gap-2">
+							{#each days as day}
+								<label class="flex items-center gap-2 p-2 rounded-lg bg-surface-50 dark:bg-surface-800/50 border border-surface-200 dark:border-white/10 cursor-pointer text-xs">
+									<input type="checkbox" name="scheduleDay" value={day.value} checked={cls.scheduleDay.includes(day.value)} class="w-3.5 h-3.5 rounded text-primary-500" />
+									<span class="text-surface-800/70 dark:text-white/60">{day.label}</span>
+								</label>
+							{/each}
+						</div>
 					</div>
 
 					<div>
@@ -266,7 +277,7 @@
 			
 			<div class="flex items-center gap-4 text-sm font-medium no-print">
 				<div class="px-3 py-1.5 rounded-lg bg-surface-100 dark:bg-surface-800/50 text-surface-800/70 dark:text-white/60">
-					<span class="capitalize">{cls.scheduleDay}</span>, {cls.scheduleTime} ({cls.durationMinutes}m)
+					<span class="capitalize">{formatDays(cls.scheduleDay)}</span>, {cls.scheduleTime} ({cls.durationMinutes}m)
 				</div>
 				{#if cls.status === 'active'}
 					<span class="px-3 py-1 flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-500 text-xs">
@@ -356,7 +367,11 @@
 					
 					<div class="p-4 border-b border-surface-100 dark:border-white/5 bg-surface-50 dark:bg-surface-800/20 no-print">
 						<form method="POST" action="?/addSession" use:enhance={() => { loading = true; return async ({ update }) => { loading = false; await update(); }; }} class="space-y-3">
-							<input type="date" name="sessionDate" required class="w-full px-3 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-white/10 rounded-lg text-sm" />
+							<div class="grid grid-cols-2 gap-2">
+								<input type="date" name="sessionDate" required class="w-full px-3 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-white/10 rounded-lg text-sm" />
+								<input type="time" name="sessionTime" value={cls.scheduleTime} class="w-full px-3 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-white/10 rounded-lg text-sm" />
+							</div>
+							<input type="url" name="meetingLink" value={cls.meetingLink} placeholder="Link Meeting (Opsional)" class="w-full px-3 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-white/10 rounded-lg text-sm" />
 							<input type="text" name="topic" placeholder="Materi / Topik" class="w-full px-3 py-2 bg-white dark:bg-surface-800 border border-surface-200 dark:border-white/10 rounded-lg text-sm" />
 							<button type="submit" disabled={loading} class="w-full px-3 py-2 bg-surface-800 dark:bg-white/10 text-white text-sm font-medium rounded-lg hover:bg-surface-700 dark:hover:bg-white/20 transition-all cursor-pointer disabled:opacity-50">
 								+ Tambah Sesi
@@ -371,14 +386,38 @@
 					{:else}
 						<div class="divide-y divide-surface-100 dark:divide-white/5 max-h-[500px] overflow-y-auto">
 							{#each cls.sessions as session}
-								<div class="p-4 space-y-1 hover:bg-surface-50 dark:hover:bg-white/[0.01] transition-colors">
+								<div class="p-4 space-y-2 hover:bg-surface-50 dark:hover:bg-white/[0.01] transition-colors relative group">
 									<div class="flex items-center justify-between">
 										<span class="text-[10px] font-bold text-primary-500 uppercase tracking-wider">Sesi {session.sessionNumber}</span>
-										<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-surface-100 dark:bg-white/5 text-surface-800/40 dark:text-white/30 uppercase">{session.status}</span>
+										<div class="flex items-center gap-2">
+											{#if session.status === 'scheduled'}
+												<form method="POST" action="?/completeSession" use:enhance>
+													<input type="hidden" name="sessionId" value={session.id} />
+													<input type="hidden" name="status" value="completed" />
+													<button type="submit" class="p-1 rounded bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all cursor-pointer opacity-0 group-hover:opacity-100" title="Tandai Selesai">
+														<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+													</button>
+												</form>
+											{/if}
+											<span class="text-[9px] font-bold px-1.5 py-0.5 rounded {session.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-surface-100 dark:bg-white/5 text-surface-800/40 dark:text-white/30'} uppercase">
+												{session.status}
+											</span>
+										</div>
 									</div>
-									<p class="text-sm font-bold text-surface-800 dark:text-white/90 font-mono tracking-tight">{session.sessionDate}</p>
+									<div class="flex items-center justify-between">
+										<p class="text-sm font-bold text-surface-800 dark:text-white/90 font-mono tracking-tight">{session.sessionDate}</p>
+										{#if session.sessionTime}
+											<p class="text-[11px] text-surface-800/50 dark:text-white/40">{session.sessionTime}</p>
+										{/if}
+									</div>
 									{#if session.topic}
 										<p class="text-xs text-surface-800/60 dark:text-white/50 leading-relaxed">{session.topic}</p>
+									{/if}
+									{#if session.meetingLink}
+										<a href={session.meetingLink} target="_blank" class="flex items-center gap-1.5 text-[10px] text-primary-500 hover:underline">
+											<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>
+											Link Sesi ini
+										</a>
 									{/if}
 								</div>
 							{/each}

@@ -8,6 +8,13 @@
       "when": 1775713088956,
       "tag": "0000_outstanding_senator_kelly",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1775790186971,
+      "tag": "0001_update_flexible_sessions",
+      "breakpoints": true
     }
   ]
 }

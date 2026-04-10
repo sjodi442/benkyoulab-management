@@ -62,17 +62,20 @@ export async function createClass(
 		maxStudents?: number;
 	}
 ) {
-	// Check for schedule conflicts
+	// Check for schedule conflicts (handle multi-day strings)
 	const existingClasses = await db.query.classes.findMany({
 		where: and(eq(classes.teacherId, data.teacherId), eq(classes.status, 'active'))
 	});
 
-	const conflict = existingClasses.find(
-		(c) => c.scheduleDay === data.scheduleDay && c.scheduleTime === data.scheduleTime
-	);
+	const newDays = data.scheduleDay.split(',').map(d => d.trim());
+	const conflict = existingClasses.find(c => {
+		const existingDays = c.scheduleDay.split(',').map(d => d.trim());
+		const hasDayOverlap = newDays.some(d => existingDays.includes(d));
+		return hasDayOverlap && c.scheduleTime === data.scheduleTime;
+	});
 
 	if (conflict) {
-		throw new Error(`Guru sudah memiliki kelas pada ${data.scheduleDay} pukul ${data.scheduleTime}`);
+		throw new Error(`Guru sudah memiliki kelas pada salah satu hari tersebut (${data.scheduleDay}) pukul ${data.scheduleTime}`);
 	}
 
 	const classId = crypto.randomUUID();
@@ -109,12 +112,13 @@ export async function enrollStudent(db: Database, classId: string, studentId: st
 			with: { class: true }
 		});
 
-		const conflict = studentEnrollments.find(
-			(e) =>
-				e.class.status === 'active' &&
-				e.class.scheduleDay === cls.scheduleDay &&
-				e.class.scheduleTime === cls.scheduleTime
-		);
+		const conflict = studentEnrollments.find(e => {
+			if (e.class.status !== 'active') return false;
+			const existingDays = e.class.scheduleDay.split(',').map(d => d.trim());
+			const newDays = cls.scheduleDay.split(',').map(d => d.trim());
+			const hasDayOverlap = newDays.some(d => existingDays.includes(d));
+			return hasDayOverlap && e.class.scheduleTime === cls.scheduleTime;
+		});
 
 		if (conflict) {
 			throw new Error(`Siswa ini sudah memiliki kelas lain (${conflict.class.name}) pada hari dan jam yang sama!`);
@@ -168,12 +172,16 @@ export async function updateClass(
 				where: and(eq(classes.teacherId, teacherId), eq(classes.status, 'active'))
 			});
 
-			const conflict = existingClasses.find(
-				(c) => c.id !== id && c.scheduleDay === day && c.scheduleTime === time
-			);
+			const newDays = day.split(',').map(d => d.trim());
+			const conflict = existingClasses.find(c => {
+				if (c.id === id) return false;
+				const existingDays = c.scheduleDay.split(',').map(d => d.trim());
+				const hasDayOverlap = newDays.some(d => existingDays.includes(d));
+				return hasDayOverlap && c.scheduleTime === time;
+			});
 
 			if (conflict) {
-				throw new Error(`Guru sudah memiliki kelas pada ${day} pukul ${time}`);
+				throw new Error(`Guru sudah memiliki kelas pada salah satu hari tersebut (${day}) pukul ${time}`);
 			}
 		}
 	}
@@ -189,7 +197,7 @@ export async function updateClass(
 
 export async function createClassSession(
 	db: Database,
-	data: { classId: string; sessionDate: string; sessionNumber: number; topic?: string; notes?: string }
+	data: { classId: string; sessionDate: string; sessionNumber: number; sessionTime?: string; meetingLink?: string; topic?: string; notes?: string }
 ) {
 	const sessionId = crypto.randomUUID();
 	await db.insert(classSessions).values({
@@ -197,11 +205,17 @@ export async function createClassSession(
 		classId: data.classId,
 		sessionDate: data.sessionDate,
 		sessionNumber: data.sessionNumber,
+		sessionTime: data.sessionTime || null,
+		meetingLink: data.meetingLink || null,
 		topic: data.topic || null,
 		notes: data.notes || null,
 		status: 'scheduled'
 	});
 	return sessionId;
+}
+
+export async function updateSessionStatus(db: Database, id: string, status: 'scheduled' | 'completed' | 'cancelled') {
+	await db.update(classSessions).set({ status }).where(eq(classSessions.id, id));
 }
 
 export async function recordAttendance(

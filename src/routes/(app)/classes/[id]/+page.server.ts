@@ -33,7 +33,8 @@ export const actions: Actions = {
 		const name = data.get('name') as string;
 		const level = data.get('level') as string;
 		const teacherId = data.get('teacherId') as string;
-		const scheduleDay = data.get('scheduleDay') as string;
+		const scheduleDays = data.getAll('scheduleDay') as string[];
+		const scheduleDay = scheduleDays.join(',');
 		const scheduleTime = data.get('scheduleTime') as string;
 		const durationMinutes = parseInt(data.get('durationMinutes') as string);
 		const meetingLink = data.get('meetingLink') as string;
@@ -99,6 +100,8 @@ export const actions: Actions = {
 
 		const data = await request.formData();
 		const sessionDate = data.get('sessionDate') as string;
+		const sessionTime = data.get('sessionTime') as string;
+		const meetingLink = data.get('meetingLink') as string;
 		const topic = data.get('topic') as string;
 		const notes = data.get('notes') as string;
 
@@ -114,10 +117,31 @@ export const actions: Actions = {
 			await createClassSession(db, {
 				classId: params.id,
 				sessionDate,
+				sessionTime,
+				meetingLink,
 				sessionNumber,
 				topic,
 				notes
 			});
+			return { success: true };
+		} catch (e: any) {
+			return fail(400, { error: e.message });
+		}
+	},
+
+	completeSession: async ({ request, platform }) => {
+		const db = platform?.env?.DB ? getDb(platform.env.DB) : null;
+		if (!db) return fail(500, { error: 'Database unavailable' });
+
+		const data = await request.formData();
+		const sessionId = data.get('sessionId') as string;
+		const status = data.get('status') as 'completed' | 'scheduled' | 'cancelled';
+
+		if (!sessionId) return fail(400, { error: 'ID sesi tidak ditemukan' });
+
+		try {
+			const { updateSessionStatus } = await import('$lib/server/services/classes');
+			await updateSessionStatus(db, sessionId, status);
 			return { success: true };
 		} catch (e: any) {
 			return fail(400, { error: e.message });
